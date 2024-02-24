@@ -5,11 +5,6 @@ import java.util.HashMap;
 
 public final class CubeAlgUtils {
     public static final HashmapLoader hashmapLoader = new HashmapLoader();
-    public static String genRandomState() {
-        //TODO gen random state
-        return null;
-    }
-
     public static String formatAlg(String alg) {
         //TODO: format redundant repetitions in algs (ex: L L2)
         StringBuilder formattedAlg = new StringBuilder();
@@ -159,13 +154,57 @@ public final class CubeAlgUtils {
 
         return returnState.toString();
     }
+    public static char orientCorner(char corner, int orientation){
+        switch (orientation){
+            case 0 -> {
+                if ("abcdefgh".indexOf(corner) != -1){
+                    return corner;
+                } else if ("ijklmnop".indexOf(corner) != -1) {
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) - 8);
+                }
+                else {
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) - 16);
+                }
+            }
+            case 1 -> {
+                if ("abcdefgh".indexOf(corner) != -1){
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) + 8);
+                } else if ("ijklmnop".indexOf(corner) != -1) {
+                    return corner;
+                }
+                else {
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) - 8);
+                }
+            }
+            case 2 -> {
+                if ("abcdefgh".indexOf(corner) != -1){
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) + 16);
+                }
+                else if ("ijklmnop".indexOf(corner) != -1) {
+                    return "abcdefghijklmnopqrstuvwx".charAt("abcdefghijklmnopqrstuvwx".indexOf(corner) + 8);
+                }
+                else {
+                    return corner;
+                }
+            }
+        }
+        return 0;
+    }
+    public static int cornerToOrientation(char corner){
+        if ("abcdefgh".indexOf(corner) != -1){
+            return 0;
+        } else if ("ijklmnop".indexOf(corner) != -1) {
+            return 1;
+        }
+        return 2;
+    }
 
-    private static char flipEdge(char edge) {
+    public static char flipEdge(char edge) {
         String abc = "abcdefghijklmnopqrstuvwx".repeat(2);
         return abc.charAt(abc.indexOf(edge) + 12);
     }
 
-    private static char rotateCorner(char corner, boolean clockwise) {
+    public static char rotateCorner(char corner, boolean clockwise) {
         String abc = "abcdefghijklmnopqrstuvwx".repeat(2);
         return clockwise ? abc.charAt(abc.indexOf(corner) + 8) : abc.charAt(abc.indexOf(corner) + 16);
     }
