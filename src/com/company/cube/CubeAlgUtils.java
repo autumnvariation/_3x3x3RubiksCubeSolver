@@ -6,12 +6,73 @@ import java.util.HashMap;
 public final class CubeAlgUtils {
     public static final HashmapLoader hashmapLoader = new HashmapLoader();
     public static String formatAlg(String alg) {
-        //TODO: format redundant repetitions in algs (ex: L L2)
-        StringBuilder formattedAlg = new StringBuilder();
+        System.out.println(alg);
+        alg = alg.trim().replaceAll("\\s+"," ");
         String[] moves = alg.split(" ");
-        for (String move : moves) {
-            if (!move.isEmpty() && !move.isBlank()) {
-                formattedAlg.append(move).append(" ");
+
+        int previousCount;
+        String formatted;
+        do {
+            previousCount = moves.length;
+            formatted = format(moves);
+            moves = formatted.split(" ");
+
+        } while (previousCount != moves.length);
+        return formatted;
+    }
+
+    private static String format(String[] moves) {
+        StringBuilder formattedAlg = new StringBuilder();
+        boolean streak = false;
+        int orientationCounter = 0;
+        for (int i = 0; i < moves.length; i++) {
+            String currentMove = moves[i];
+            char absCurrentMove = currentMove.charAt(0);
+            String nextMove;
+            char absNextMove = 0;
+            if (i != moves.length - 1){
+                nextMove = moves[i + 1];
+                absNextMove = nextMove.charAt(0);
+            }
+            //no streak
+            if (absCurrentMove != absNextMove && !streak){
+                formattedAlg.append(currentMove).append(" ");
+                continue;
+            }
+            if (currentMove.length() == 1){
+                orientationCounter++;
+            }
+            else if (currentMove.charAt(1) == '2'){
+                orientationCounter += 2;
+            }
+            else {
+                orientationCounter += 3;
+            }
+            //start or middle of streak
+            if (!streak){
+                streak = true;
+
+            }
+            //end of streak
+            else {
+                int mod = orientationCounter % 4;
+
+                switch (mod) {
+                    case 0 -> {
+                        //do nothing
+                    }
+                    case 1 -> {
+                        formattedAlg.append(absCurrentMove).append(" ");
+                    }
+                    case 2 -> {
+                        formattedAlg.append(absCurrentMove).append("2").append(" ");
+                    }
+                    case 3 -> {
+                        formattedAlg.append(absCurrentMove).append("'").append(" ");
+                    }
+                }
+                orientationCounter = 0;
+                streak = false;
             }
         }
         return formattedAlg.toString().trim();
